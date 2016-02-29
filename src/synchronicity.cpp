@@ -1,7 +1,6 @@
 #pragma once
 
 #include "synchronicity.h"
-#include "antidbg.h"
 
 size_t authhash = 0;
 int Synchronicity::Init()
