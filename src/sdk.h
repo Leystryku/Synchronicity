@@ -480,7 +480,7 @@ public:
 	{
 		static int offset = GetNetvarOffset("*", "m_hObserverTarget");
 
-		HANDLE hdnl = *(HANDLE*)((char*)(this) + offset);
+		CBaseHandle hdnl = *(CBaseHandle*)((char*)(this) + offset);
 
 		return (IEntity*)g_pEntList->GetClientEntityFromHandle(hdnl);
 	}
@@ -523,7 +523,7 @@ static bool CrawlTableForHook(RecvTable *pTable, const char *name, void* hook)
 
 		if (strcmp(name, pProp->m_pVarName))
 		{
-			pProp->m_ProxyFn = hook;
+			pProp->m_ProxyFn = (RecvVarProxyFn)hook;
 			ret = true;
 		}
 

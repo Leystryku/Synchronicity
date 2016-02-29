@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Project DefaultTargets="Build" ToolsVersion="12.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+<Project DefaultTargets="Build" ToolsVersion="14.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup Label="ProjectConfigurations">
     <ProjectConfiguration Include="Debug|Win32">
       <Configuration>Debug</Configuration>
@@ -21,13 +21,13 @@
     <ConfigurationType>DynamicLibrary</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
     <CharacterSet>MultiByte</CharacterSet>
-    <PlatformToolset>v120</PlatformToolset>
+    <PlatformToolset>v140</PlatformToolset>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
     <ConfigurationType>DynamicLibrary</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
     <CharacterSet>MultiByte</CharacterSet>
-    <PlatformToolset>v120</PlatformToolset>
+    <PlatformToolset>v140</PlatformToolset>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
   <ImportGroup Label="ExtensionSettings">
@@ -58,7 +58,7 @@
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
       <PreprocessorDefinitions>DEBUG;_GENERIC;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>..\..\..\..\Source-Engine\src\game\shared;..\..\..\..\Source-Engine\src\public;..\..\..\..\Source-Engine\src\public\tier3;..\..\..\..\Source-Engine\src\public\tier2;..\..\..\..\Source-Engine\src\public\tier1;..\..\..\..\Source-Engine\src\public\tier0;..\..\..\..\Source-Engine\src\game\client;..\..\..\..\Source-Engine\src\tier1;..\..\..\..\Source-Engine\src\tier0;..\..\..\..\Source-Engine\src\game;..\..\..\..\Source-Engine\src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>C:\Users\Leystryku\Desktop\Folders\Source-Engine\src\game\shared;C:\Users\Leystryku\Desktop\Folders\Source-Engine\src\public;C:\Users\Leystryku\Desktop\Folders\Source-Engine\src\public\tier3;C:\Users\Leystryku\Desktop\Folders\Source-Engine\src\public\tier2;C:\Users\Leystryku\Desktop\Folders\Source-Engine\src\public\tier1;C:\Users\Leystryku\Desktop\Folders\Source-Engine\src\public\tier0;C:\Users\Leystryku\Desktop\Folders\Source-Engine\src\game\client;C:\Users\Leystryku\Desktop\Folders\Source-Engine\src\tier1;C:\Users\Leystryku\Desktop\Folders\Source-Engine\src\tier0;C:\Users\Leystryku\Desktop\Folders\Source-Engine\src\game;C:\Users\Leystryku\Desktop\Folders\Source-Engine\src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
       <Optimization>Full</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
@@ -76,7 +76,7 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
-      <AdditionalLibraryDirectories>..\..\..\..\Source-Engine\src\lib\public;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>C:\Users\Leystryku\Desktop\Folders\Source-Engine\src\lib\public;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <ImportLibrary>C:\Synchronicity\dll\needsprotection.lib</ImportLibrary>
       <AdditionalOptions>/OPT:REF /OPT:ICF /LTCG %(AdditionalOptions)</AdditionalOptions>
     </Link>
@@ -114,7 +114,6 @@
     <ClInclude Include="..\src\Lua\Types.h" />
     <ClInclude Include="..\src\Lua\UserData.h" />
     <ClInclude Include="..\src\Lua\iluashared.h" />
-    <ClInclude Include="..\src\antidbg.h" />
     <ClInclude Include="..\src\hooks.h" />
     <ClInclude Include="..\src\sdk.h" />
     <ClInclude Include="..\src\stdafx.h" />

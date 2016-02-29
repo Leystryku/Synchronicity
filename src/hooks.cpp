@@ -3,10 +3,6 @@
 #include "hooks.h"
 char synchronicityfolder[MAX_PATH];
 
-//ILuaObject* lua_hookfunc = 0;
-//ILuaObject* lua_vectorfunc = 0;
-//ILuaObject* lua_anglefunc = 0;
-
 int lua_hookfuncref = 0;
 int lua_vectorfuncref = 0;
 int lua_anglefuncref = 0;
@@ -127,31 +123,43 @@ bool __stdcall hooked_InPrediction(void)
 
 	return ret;
 }
-typedef bool(__fastcall *OrigCreateMove)(void*thisptr, int edx, float flInputSampleTime, CUserCmd *pCmd);
+
+typedef bool(__fastcall *OrigCreateMove)(void*thisptr, void*edx, float flInputSampleTime, CUserCmd *pCmd);
 OrigCreateMove CreateMoveFn;
 
-bool __fastcall hooked_CreateMove(void*thisptr, int edx, float flInputSampleTime, CUserCmd* pCmd) // crash reason here
+bool __fastcall hooked_CreateMove(void*thisptr, void*edx, float flInputSampleTime, CUserCmd* pCmd)
 {
-	if (!thisptr || !flInputSampleTime || !pCmd || !lua_hookfuncref || pCmd->command_number<400)
+	if (!flInputSampleTime || !pCmd || !lua_hookfuncref || menuluastate->Top())
 		return CreateMoveFn(thisptr, edx, flInputSampleTime, pCmd);
 
-	//	menuluastate->PushLuaObject(lua_hookfunc);
-	menuluastate->ReferencePush(lua_hookfuncref);
-	menuluastate->PushString("OnCreateMove");
 	GarrysMod::Lua::UserData* ud = (GarrysMod::Lua::UserData*)mlua->NewUserdata(sizeof(GarrysMod::Lua::UserData));
+
+
+	if (!ud)
+	{
+		return CreateMoveFn(thisptr, edx, flInputSampleTime, pCmd);
+	}
+
 	ud->type = GarrysMod::Lua::Type::USERCMD;
 	ud->data = pCmd;
 
-	mlua->CreateMetaTableType("CUserCmd", GarrysMod::Lua::Type::USERCMD);
-	mlua->SetMetaTable(1);
-	menuluastate->PushUserdata(ud);
 
+
+	menuluastate->ReferencePush(lua_hookfuncref);
+	menuluastate->PushString("OnCreateMove");
+
+	menuluastate->PushUserdata(ud);
+	menuluastate->CreateMetaTableType("CUserCmd", GarrysMod::Lua::Type::USERCMD);
+
+	menuluastate->SetMetaTable(-2);
 
 	if (menuluastate->PCall(2, 0, 0))
 	{
 		MessageBoxA(NULL, menuluastate->GetString(-1), "Synchronicity - Error", MB_OK);
+		menuluastate->Pop();
 
 	}
+	menuluastate->Pop();
 
 	return CreateMoveFn(thisptr, edx, flInputSampleTime, pCmd);
 }
@@ -213,8 +221,8 @@ void* __fastcall hooked_CreateLuaInterface(void*thisptr, int edx, unsigned char 
 {
 	void*state = CreateLuaInterfaceFn(thisptr, edx, cstate, renew);
 
-	VMTHook *hookedstate = new VMTHook(state);
-	RunStringExFn = (OrigRunStringEx)hookedstate->hookFunction(107, hooked_RunStringEx);
+	///VMTHook *hookedstate = new VMTHook(state);
+	//RunStringExFn = (OrigRunStringEx)hookedstate->hookFunction(107, hooked_RunStringEx)//crash reason here
 
 	return state;
 }
@@ -1520,8 +1528,6 @@ void __stdcall hooked_FrameStageNotify(ClientFrameStage_t stage)
 
 std::string m_hooks::HookStuff()
 {
-
-
 	BOOL success = SHGetSpecialFolderPathA(NULL, synchronicityfolder, CSIDL_MYDOCUMENTS, false);
 	if (!success)
 	{
@@ -1544,15 +1550,15 @@ std::string m_hooks::HookStuff()
 
 	clientHook->hookFunction(35, hooked_FrameStageNotify);
 
-	VMTHook *predHook = new VMTHook(g_pPrediction);
-	g_pPrediction = (IPred*)&predHook->m_pOriginalVTable;
+	//VMTHook *predHook = new VMTHook(g_pPrediction);
+	//g_pPrediction = (IPred*)&predHook->m_pOriginalVTable;
 
 
 	void**vclient = *(void***)g_pClient;
 	void* clientmode = **(void***)((char*)vclient[10] + 0x5);
 
 	VMTHook *modeHook = new VMTHook(clientmode);
-	//CreateMoveFn = (OrigCreateMove)modeHook->hookFunction(21, hooked_CreateMove);
+	CreateMoveFn = (OrigCreateMove)modeHook->hookFunction(21, hooked_CreateMove);
 
 
 	//predHook->hookFunction(14, hooked_InPrediction);
@@ -1858,7 +1864,7 @@ std::string m_hooks::HookStuff()
 	Sleep(2);
 
 	std::string readluafile = "";
-	utils::file::FileRead("C://Users//Leystryku//Desktop//synchronicity.lua", readluafile);
+	utils::file::FileRead("C://Synchronicity.lua", readluafile);
 	char*luaerrors = g_pLuaShared->RunCode(lua, readluafile.c_str(), "[C]");
 	if (luaerrors&&strlen(luaerrors)!=0)
 		MessageBoxA(NULL, luaerrors, "k", MB_OK);

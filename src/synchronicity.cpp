@@ -47,45 +47,25 @@ int Synchronicity::Init()
 
 	utils::file::WriteToLog("Synchronicity Initialized successfully!\n");
 
-	int icock = 0;
-	while (1)
-	{
-		ThinkAntiDebug();
-		OutputDebugStringA("%s%s");
-		_sleep(1);
-	}
 
 	return 1;
 }
 
 int DllInit()
 {
-	DoAntiDebug();
 	Synchronicity::Init();
 	return 0;
 }
 
-bool antidbg_done = false;
 BOOL APIENTRY DllMain(HMODULE hModule, DWORD reason, LPVOID lpReserved)
 {
 
 	if (reason == DLL_PROCESS_ATTACH)
 	{
-
-		DoAntiDebug();
-
-		if (!antidbg_done)
-		{
-			ExitProcess(0);
-			exit(0);
-			return 0;
-		}
-
 		HANDLE thread = CreateThread(NULL, NULL, (LPTHREAD_START_ROUTINE)DllInit, NULL, CREATE_SUSPENDED, 0);
-		HideThread(thread);
+		DisableThreadLibraryCalls(hModule);
 		Sleep(5);
 		ResumeThread(thread);
-		DisableThreadLibraryCalls(hModule);
 	}
 
 	return TRUE;
